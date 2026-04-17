@@ -8,7 +8,7 @@
 - 🔍 **Wikipedia Search**: Search for any topic on Wikipedia in multiple languages.
 - 📝 **Automatic Summarization**: Generate clear and concise summaries of the retrieved text using NLP models.
 - 🖥️ **Graphical User Interface**: A simple and intuitive user interface built with **PyQt5**.
-- 🌐 **Multilingual Support**: Supports searching in various languages (English, Italian, etc.).
+- 🌐 **English supported**
 
 ---
 
@@ -29,5 +29,5 @@ To run **VisioWikiAI**, ensure you have **Python 3.7 or higher** installed, alon
 ### 1. Clone the Repository (Optional)
 If you are working with a Git repository, clone it using:
 ```bash
-git clone https://github.com/your-username/VisioWikiAI.git
-cd VisioWikiAI
+git clone https://github.com/your-username/WikiAI.git
+cd WikiAI
