@@ -31,3 +31,12 @@ If you are working with a Git repository, clone it using:
 ```bash
 git clone https://github.com/your-username/WikiAI.git
 cd WikiAI
+
+
+
+
+
+
+
+
+## Attributions This project uses the **distilbart-cnn-6-6** model of [sshleifer](https://huggingface.co/sshleifer), released under [Apache 2.0 license](https://www.apache.org/licenses/LICENSE-2.0). For licensing details, see the ['third_party_licenses/'](third_party_licenses/) folder.
