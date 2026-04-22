@@ -3,6 +3,8 @@
 **WikiAI** is a Python application that allows you to **search for topics on Wikipedia** and **generate automatic summaries** using natural language processing (NLP) models. The application includes an **intuitive graphical user interface (GUI)** developed with **PyQt5**, making it easy to interact with the system.
 ## Attributions This project uses the **distilbart-cnn-6-6** model of [sshleifer](https://huggingface.co/sshleifer), released under [Apache 2.0 license](https://www.apache.org/licenses/LICENSE-2.0). For licensing details, see the ['third_party_licenses/'](third_party_licenses/) folder.
 
+The computer need to had 8GB of RAM or more.
+
 ---
 
 ## ✨ Features
