@@ -3,268 +3,286 @@ import wikipedia
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
 from PyQt5.QtWidgets import (
     QApplication, QMainWindow, QVBoxLayout, QWidget, QLabel,
-    QLineEdit, QPushButton, QTextEdit, QHBoxLayout, QTabWidget,
-    QGroupBox, QScrollArea
+    QLineEdit, QPushButton, QTextEdit, QHBoxLayout, QStackedWidget,
+    QListWidget, QListWidgetItem, QSplitter, QFrame, QMessageBox
 )
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QFont, QIcon, QPalette, QColor
+from PyQt5.QtCore import Qt, QSize, QThread, pyqtSignal
+from PyQt5.QtGui import QFont, QIcon
+
+class ModelLoader(QThread):
+    finished = pyqtSignal(str)
+
+    def __init__(self, text, tokenizer, model, max_length=150):
+        super().__init__()
+        self.text = text
+        self.tokenizer = tokenizer
+        self.model = model
+        self.max_length = max_length
+
+    def run(self):
+        try:
+            inputs = self.tokenizer(
+                self.text,
+                max_length=1024,
+                return_tensors="pt",
+                truncation=True
+            )
+
+            summary_ids = self.model.generate(
+                inputs["input_ids"],
+                max_length=self.max_length,
+                min_length=30,
+                num_beams=4,
+                forced_bos_token_id=0
+            )
+
+            summary = self.tokenizer.decode(summary_ids[0], skip_special_tokens=True)
+            summary = " ".join(summary.split())
+            self.finished.emit(summary)
+        except Exception as e:
+            self.finished.emit(f"Error generating summary: {str(e)}")
 
 class WikipediaSummarizerApp(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("VisioWikiAI")
-        self.setGeometry(100, 100, 800, 600)
+        self.setWindowTitle("WikiAI | The Future of Automatic Summarization")
+        self.setGeometry(100, 100, 1000, 700)
 
-        # Imposta l'icona (opzionale)
         try:
             self.setWindowIcon(QIcon("icon.png"))
         except:
             pass
 
-        # Carica il modello e il tokenizer
-        self.model_name = "sshleifer/distilbart-cnn-6-6"
+        # Load a lighter model
+        self.model_name = "sshleifer/distilbart-cnn-12-6"
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
         self.model = AutoModelForSeq2SeqLM.from_pretrained(self.model_name)
 
-        # Crea i widget principali
         self.init_ui()
 
     def init_ui(self):
-        # Crea un QTabWidget per i pannelli
-        self.tabs = QTabWidget()
+        splitter = QSplitter()
 
-        # Pannello principale per la ricerca
+        self.sidebar = QListWidget()
+        self.sidebar.setFixedWidth(200)
+        self.sidebar.setStyleSheet("""
+            QListWidget {
+                background-color: #2c3e50;
+                color: white;
+                border: none;
+                padding: 10px;
+            }
+            QListWidget::item:selected {
+                background-color: #3498db;
+                border-radius: 5px;
+            }
+            QListWidget::item:hover {
+                background-color: #2980b9;
+                border-radius: 5px;
+            }
+        """)
+
+        self.add_sidebar_item("🔍 Search", 0)
+        self.add_sidebar_item("💼 Business (Coming Soon)", 1)
+        self.add_sidebar_item("⚙️ Settings (Coming Soon)", 2)
+        self.sidebar.currentRowChanged.connect(self.switch_tab)
+
+        self.stacked_widget = QStackedWidget()
+
         self.search_tab = QWidget()
         self.init_search_tab()
-        self.tabs.addTab(self.search_tab, "Ricerca")
+        self.stacked_widget.addWidget(self.search_tab)
 
-        # Pannello per il tutorial
-        self.tutorial_tab = QWidget()
-        self.init_tutorial_tab()
-        self.tabs.addTab(self.tutorial_tab, "Tutorial")
+        self.business_tab = QWidget()
+        self.init_business_tab()
+        self.stacked_widget.addWidget(self.business_tab)
 
-        # Pannello per le impostazioni
         self.settings_tab = QWidget()
         self.init_settings_tab()
-        self.tabs.addTab(self.settings_tab, "Impostazioni")
+        self.stacked_widget.addWidget(self.settings_tab)
 
-        # Imposta il layout principale
-        self.setCentralWidget(self.tabs)
+        splitter.addWidget(self.sidebar)
+        splitter.addWidget(self.stacked_widget)
+        splitter.setStretchFactor(1, 1)
 
-        # Applica lo stile
+        self.setCentralWidget(splitter)
         self.apply_stylesheet()
 
+    def add_sidebar_item(self, text, index):
+        item = QListWidgetItem(text)
+        item.setSizeHint(QSize(20, 40))
+        self.sidebar.addItem(item)
+
+    def switch_tab(self, index):
+        self.stacked_widget.setCurrentIndex(index)
+
     def init_search_tab(self):
-        # Layout principale per il pannello di ricerca
         layout = QVBoxLayout()
 
-        # Gruppo per la ricerca
-        search_group = QGroupBox("Cerca su Wikipedia")
+        welcome_label = QLabel()
+        welcome_label.setText(
+            "<h1>Welcome to WikiAI!</h1>"
+            "<p>We have solved the problem of automatic summarization. Now you can:</p>"
+            "<ul>"
+            "<li>Search for any topic on Wikipedia.</li>"
+            "<li>Get clear and precise summaries in seconds.</li>"
+            "<li>Save time and improve your productivity.</li>"
+            "</ul>"
+            "<p><b>WikiAI is your personal assistant for knowledge.</b></p>"
+        )
+        welcome_label.setWordWrap(True)
+        welcome_label.setAlignment(Qt.AlignCenter)
+        layout.addWidget(welcome_label)
+
+        line = QFrame()
+        line.setFrameShape(QFrame.HLine)
+        line.setFrameShadow(QFrame.Sunken)
+        layout.addWidget(line)
+
+        search_group = QWidget()
         search_layout = QVBoxLayout()
 
-        # Widget per l'input
         input_layout = QHBoxLayout()
-        self.topic_label = QLabel("Argomento:")
+        self.topic_label = QLabel("Search for a topic:")
         self.topic_input = QLineEdit()
-        self.topic_input.setPlaceholderText("Es. Austria, Photosynthesis, Python...")
-        self.search_button = QPushButton("Cerca e Riassumi")
+        self.topic_input.setPlaceholderText("E.g. Artificial Intelligence, Austria, Photosynthesis...")
+        self.search_button = QPushButton("Generate Summary")
         self.search_button.clicked.connect(self.on_search_clicked)
 
         input_layout.addWidget(self.topic_label)
         input_layout.addWidget(self.topic_input)
         input_layout.addWidget(self.search_button)
 
-        # Aggiungi il layout di input al gruppo
-        search_layout.addLayout(input_layout)
-
-        # Widget per il risultato
-        result_group = QGroupBox("Riassunto")
-        result_layout = QVBoxLayout()
         self.result_text = QTextEdit()
         self.result_text.setReadOnly(True)
+        self.result_text.setPlaceholderText("Your summary will appear here...")
 
-        # Imposta il colore di sfondo e testo per result_text
-        self.result_text.setStyleSheet("background-color: white; color: black;")
-        self.topic_input.setStyleSheet("background-color: white; color: black;")
-
-        result_layout.addWidget(self.result_text)
-        result_group.setLayout(result_layout)
-
-        # Aggiungi i gruppi al layout principale
-        search_layout.addWidget(result_group)
+        search_layout.addLayout(input_layout)
+        search_layout.addWidget(self.result_text)
         search_group.setLayout(search_layout)
         layout.addWidget(search_group)
 
-        # Imposta il layout per il pannello di ricerca
         self.search_tab.setLayout(layout)
 
-    def init_tutorial_tab(self):
-        # Layout per il pannello del tutorial
+    def init_business_tab(self):
         layout = QVBoxLayout()
-        scroll = QScrollArea()
-        scroll.setWidgetResizable(True)
-
-        # Contenuto del tutorial
-        tutorial_content = QWidget()
-        tutorial_layout = QVBoxLayout()
-
-        tutorial_label = QLabel()
-        tutorial_label.setText(
-            "<h1>Benvenuto in VisioWikiAI!</h1>"
-            "<p>Questa applicazione ti permette di:</p>"
+        coming_soon_label = QLabel()
+        coming_soon_label.setText(
+            "<h1>💼 WikiAI Business</h1>"
+            "<p>We are working on a <b>professional</b> version of WikiAI with:</p>"
             "<ul>"
-            "<li>Cercare argomenti su <b>Wikipedia</b>.</li>"
-            "<li>Generare <b>riassunti automatici</b> usando l'intelligenza artificiale.</li>"
-            "<li>Salvare e consultare i risultati.</li>"
+            "<li>Advanced summaries with premium AI models.</li>"
+            "<li>Automatic translation in over 50 languages.</li>"
+            "<li>Integration with business tools (Slack, Google Drive, etc.).</li>"
+            "<li>Priority support and dedicated assistance.</li>"
             "</ul>"
-            "<h2>Come usare l'app:</h2>"
-            "<ol>"
-            "<li>Inserisci un argomento nel campo di ricerca (es. 'Austria').</li>"
-            "<li>Clicca su <b>Cerca e Riassumi</b>.</li>"
-            "<li>Leggi il riassunto generato automaticamente.</li>"
-            "</ol>"
-            "<h2>Suggerimenti:</h2>"
-            "<ul>"
-            "<li>Usa argomenti specifici per risultati migliori.</li>"
-            "<li>Se l'argomento non viene trovato, prova con un termine più generico.</li>"
-            "</ul>"
+            "<p><b>Coming Soon!</b></p>"
+            "<p>Stay tuned for updates.</p>"
         )
-        tutorial_label.setWordWrap(True)
-        tutorial_label.setAlignment(Qt.AlignLeft)
-        tutorial_layout.addWidget(tutorial_label)
-        tutorial_content.setLayout(tutorial_layout)
-        scroll.setWidget(tutorial_content)
-        layout.addWidget(scroll)
-        self.tutorial_tab.setLayout(layout)
+        coming_soon_label.setWordWrap(True)
+        coming_soon_label.setAlignment(Qt.AlignCenter)
+        layout.addWidget(coming_soon_label)
+        self.business_tab.setLayout(layout)
 
     def init_settings_tab(self):
-        # Layout per il pannello delle impostazioni
         layout = QVBoxLayout()
-        settings_label = QLabel("Impostazioni di VisioWikiAI (coming soon)")
-        settings_label.setAlignment(Qt.AlignCenter)
-        layout.addWidget(settings_label)
-
-        # Aggiungi altre impostazioni qui in futuro
-        info_label = QLabel("Versione 1.0.0\n\nFunzionalità avanzate in arrivo!")
-        info_label.setAlignment(Qt.AlignCenter)
-        layout.addWidget(info_label)
-
+        coming_soon_label = QLabel()
+        coming_soon_label.setText(
+            "<h1>⚙️ Settings</h1>"
+            "<p>This section will allow you to:</p>"
+            "<ul>"
+            "<li>Customize the interface (dark/light theme).</li>"
+            "<li>Manage language preferences.</li>"
+            "<li>Configure automatic saving options.</li>"
+            "<li>Access advanced settings.</li>"
+            "</ul>"
+            "<p><b>Coming Soon!</b></p>"
+            "<p>We are working to give you maximum control over VisioWikiAI.</p>"
+        )
+        coming_soon_label.setWordWrap(True)
+        coming_soon_label.setAlignment(Qt.AlignCenter)
+        layout.addWidget(coming_soon_label)
         self.settings_tab.setLayout(layout)
 
     def apply_stylesheet(self):
         self.setStyleSheet("""
             QMainWindow {
-                background-color: #f0f2f5;
-            }
-            QGroupBox {
-                border: 1px solid #d0d0d0;
-                border-radius: 5px;
-                margin-top: 10px;
-                padding: 10px;
-                font-weight: bold;
-                color: black;
+                background-color: #f9f9f9;
             }
             QLabel {
                 font-size: 14px;
-                color: black;
+                color: #333;
             }
             QLineEdit {
-                padding: 10px;
-                border: 1px solid #ccc;
-                border-radius: 5px;
+                padding: 12px;
+                border: 1px solid #ddd;
+                border-radius: 6px;
                 background-color: white;
                 color: black;
                 font-size: 14px;
             }
             QTextEdit {
-                padding: 10px;
-                border: 1px solid #ccc;
-                border-radius: 5px;
+                padding: 12px;
+                border: 1px solid #ddd;
+                border-radius: 6px;
                 background-color: white;
                 color: black;
                 font-size: 14px;
             }
             QPushButton {
-                padding: 10px 20px;
-                background-color: #4CAF50;
+                padding: 12px 24px;
+                background-color: #3498db;
                 color: white;
                 border: none;
-                border-radius: 5px;
+                border-radius: 6px;
                 font-size: 14px;
                 font-weight: bold;
             }
             QPushButton:hover {
-                background-color: #45a049;
+                background-color: #2980b9;
             }
-            QTabWidget::pane {
-                border: 1px solid #d0d0d0;
-                border-radius: 5px;
+            QStackedWidget {
+                background-color: white;
+                border-radius: 8px;
+                padding: 20px;
             }
-            QTabBar::tab {
-                padding: 8px 16px;
-                background-color: #f0f2f5;
-                border: none;
-                border-radius: 5px 5px 0 0;
-                color: black;
-            }
-            QTabBar::tab:selected {
-                background-color: #4CAF50;
-                color: white;
+            QFrame[shape="HLine"] {
+                background-color: #eee;
+                margin: 10px 0;
             }
         """)
 
     def on_search_clicked(self):
-        argomento = self.topic_input.text().strip()
-        if not argomento:
-            self.result_text.setPlainText("⚠️ Inserisci un argomento valido.")
+        topic = self.topic_input.text().strip()
+        if not topic:
+            self.result_text.setPlainText("⚠️ Please enter a valid topic.")
             return
 
-        # Mostra un messaggio di attesa
-        self.result_text.setPlainText("🔍 Ricerca in corso...")
+        self.result_text.setPlainText("🔍 Searching...")
 
-        # Ricerca su Wikipedia (in inglese)
-        testo = self.ricerca_wikipedia(argomento, lingua="en")
-        if not testo:
-            self.result_text.setPlainText("❌ Argomento non trovato su Wikipedia.")
+        text = self.search_wikipedia(topic, language="en")
+        if not text:
+            self.result_text.setPlainText("❌ Topic not found on Wikipedia. Try a different term!")
             return
 
-        # Sintetizza il testo
-        try:
-            riassunto = self.sintetizza_testo(testo)
-            self.result_text.setPlainText(riassunto)
-        except Exception as e:
-            self.result_text.setPlainText(f"❌ Errore nella generazione del riassunto: {str(e)}")
+        self.result_text.setPlainText("🤖 Generating summary...")
+        self.loader = ModelLoader(text, self.tokenizer, self.model)
+        self.loader.finished.connect(self.on_summary_generated)
+        self.loader.start()
 
-    def ricerca_wikipedia(self, argomento, lingua="en"):
-        """Cerca un argomento su Wikipedia e restituisce il testo della pagina."""
-        wikipedia.set_lang(lingua)
+    def on_summary_generated(self, summary):
+        self.result_text.setPlainText(summary)
+
+    def search_wikipedia(self, topic, language="en"):
+        """Search for a topic on Wikipedia and return the page content."""
+        wikipedia.set_lang(language)
         try:
-            pagina = wikipedia.page(argomento)
-            return pagina.content
+            page = wikipedia.page(topic)
+            return page.content
         except wikipedia.exceptions.PageError:
             return None
         except wikipedia.exceptions.DisambiguationError:
             return None
-
-    def sintetizza_testo(self, testo, max_length=150):
-        inputs = self.tokenizer(
-            testo,
-            max_length=1024,
-            return_tensors="pt",
-            truncation=True
-        )
-
-        summary_ids = self.model.generate(
-            inputs["input_ids"],
-            max_length=max_length,
-            min_length=30,
-            num_beams=4,
-            forced_bos_token_id=0
-        )
-
-        riassunto = self.tokenizer.decode(summary_ids[0], skip_special_tokens=True)
-        riassunto = " ".join(riassunto.split())  # Pulisce spazi doppi
-        return riassunto
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
