@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VisioWikiAI | The Future of Automatic Summarization</title>
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Background Image */
+        .hero-bg {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            width: 50%;
+            height: 100%;
+            background: url('https://images2.imgbox.com/4a/3d/9XGXQYnP_o.png') no-repeat center center;
+            background-size: contain;
+            opacity: 0.8;
+            z-index: 0;
+        }
+
+        /* Navigation */
+        nav {
+            background-color: #2c3e50;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin: 0 1rem;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        nav ul li a:hover {
+            color: #3498db;
+        }
+
+        /* Sections */
+        section {
+            padding: 3rem 0;
+        }
+
+        section h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            color: #2c3e50;
+        }
+
+        .section-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Code Block */
+        pre {
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+
+        code {
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .feature-card h3 {
+            color: #3498db;
+            margin-bottom: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+
+            .hero-bg {
+                display: none;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#specifications">Specifications</a></li>
+                <li><a href="#code">Code</a></li>
+                <li><a href="#license">License</a></li>
+                <li><a href="#requirements">Requirements</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header id="home">
+        <div class="hero-bg"></div>
+        <div class="container">
+            <h1>VisioWikiAI</h1>
+            <p>The future of automatic summarization is here. Transform complex Wikipedia articles into clear, concise summaries with the power of AI.</p>
+        </div>
+    </header>
+
+    <!-- Features Section -->
+    <section id="features">
+        <div class="container">
+            <h2>Features</h2>
+            <div class="section-content">
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <h3>🔍 Smart Search</h3>
+                        <p>Search any topic on Wikipedia and get instant results. Our AI understands context and finds the most relevant information.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🤖 AI Summarization</h3>
+                        <p>Advanced AI models generate clear, concise summaries of complex articles, saving you time and effort.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🌐 Multilingual Support</h3>
+                        <p>Search in multiple languages and get summaries in your preferred language (coming soon).</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>💼 Business Solutions</h3>
+                        <p>Premium features for businesses including API access, team collaboration, and priority support (coming soon).</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>📱 User-Friendly Interface</h3>
+                        <p>Intuitive design that makes it easy for anyone to use, with no technical knowledge required.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>💾 Offline Capabilities</h3>
+                        <p>Save summaries for offline reading and access your knowledge base anytime, anywhere.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Specifications Section -->
+    <section id="specifications">
+        <div class="container">
+            <h2>Technical Specifications</h2>
+            <div class="section-content">
+                <h3>How It Works</h3>
+                <p>VisioWikiAI uses state-of-the-art natural language processing to:</p>
+                <ol>
+                    <li>Search Wikipedia for the requested topic</li>
+                    <li>Extract the relevant content</li>
+                    <li>Generate a concise summary using transformer-based AI models</li>
+                    <li>Display the results in a user-friendly format</li>
+                </ol>
+
+                <h3>AI Models</h3>
+                <p>We use the following AI models:</p>
+                <ul>
+                    <li><strong>DistilBART-CNN-12-6</strong>: A lightweight version of BART optimized for summarization tasks</li>
+                    <li><strong>Custom fine-tuned models</strong>: For specific domains and languages (coming soon)</li>
+                </ul>
+
+                <h3>Limitations</h3>
+                <p>While VisioWikiAI is powerful, there are some limitations:</p>
+                <ul>
+                    <li>Complex technical topics may require additional context</li>
+                    <li>Very long articles might exceed the model's input limits</li>
+                    <li>Summaries are generated automatically and may occasionally miss nuances</li>
+                    <li>Requires internet connection for Wikipedia searches</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Code Section -->
+    <section id="code">
+        <div class="container">
+            <h2>Code Examples</h2>
+            <div class="section-content">
+                <h3>Core Functionality</h3>
+                <p>Here's the core Python code that powers VisioWikiAI:</p>
+
+                <pre><code class="python">import wikipedia
+from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
+
+def search_wikipedia(topic, language="en"):
+    """Search for a topic on Wikipedia and return the page content."""
+    wikipedia.set_lang(language)
+    try:
+        page = wikipedia.page(topic)
+        return page.content
+    except wikipedia.exceptions.PageError:
+        return None
+    except wikipedia.exceptions.DisambiguationError:
+        return None
+
+def summarize_text(text, model_name="sshleifer/distilbart-cnn-12-6", max_length=150):
+    """Generate a summary of the given text using AI."""
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
+
+    inputs = tokenizer(text, max_length=1024, return_tensors="pt", truncation=True)
+    summary_ids = model.generate(inputs["input_ids"], max_length=max_length, min_length=30, num_beams=4)
+
+    summary = tokenizer.decode(summary_ids[0], skip_special_tokens=True)
+    return " ".join(summary.split())</code></pre>
+
+                <h3>GUI Implementation</h3>
+                <p>The graphical interface is built with PyQt5:</p>
+
+                <pre><code class="python">from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QLabel, QLineEdit, QPushButton, QTextEdit
+
+class WikipediaSummarizerApp(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("VisioWikiAI")
+        self.setGeometry(100, 100, 800, 600)
+
+        # UI setup code here
+        self.init_ui()
+
+    def init_ui(self):
+        # Create widgets and layouts
+        self.topic_input = QLineEdit()
+        self.topic_input.setPlaceholderText("Enter a topic to search...")
+
+        self.search_button = QPushButton("Generate Summary")
+        self.search_button.clicked.connect(self.on_search_clicked)
+
+        self.result_text = QTextEdit()
+        self.result_text.setReadOnly(True)
+
+        # Layout setup
+        layout = QVBoxLayout()
+        layout.addWidget(self.topic_input)
+        layout.addWidget(self.search_button)
+        layout.addWidget(self.result_text)
+
+        container = QWidget()
+        container.setLayout(layout)
+        self.setCentralWidget(container)</code></pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- License Section -->
+    <section id="license">
+        <div class="container">
+            <h2>License</h2>
+            <div class="section-content">
+                <h3>Open Source License</h3>
+                <p>VisioWikiAI is released under the <strong>MIT License</strong>, which means:</p>
+                <ul>
+                    <li>You are free to use, modify, and distribute the software</li>
+                    <li>You must include the original copyright notice</li>
+                    <li>The software is provided "as is", without warranty of any kind</li>
+                </ul>
+
+                <h3>Third-Party Components</h3>
+                <p>VisioWikiAI uses several open-source components:</p>
+                <ul>
+                    <li><strong>Wikipedia API</strong>: MIT License</li>
+                    <li><strong>Transformers (Hugging Face)</strong>: Apache License 2.0</li>
+                    <li><strong>PyQt5</strong>: GPL/LGPL License</li>
+                    <li><strong>Python</strong>: Python Software Foundation License</li>
+                </ul>
+
+                <h3>Commercial Use</h3>
+                <p>For commercial applications or custom implementations, please contact us for special licensing options. The free version is intended for personal and educational use only.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Requirements Section -->
+    <section id="requirements">
+        <div class="container">
+            <h2>System Requirements</h2>
+            <div class="section-content">
+                <h3>Minimum Requirements</h3>
+                <ul>
+                    <li><strong>Operating System</strong>: Windows 10+, macOS 10.14+, or Linux</li>
+                    <li><strong>Python Version</strong>: 3.12 or higher</li>
+                    <li><strong>RAM</strong>: 8GB minimum (16GB recommended for better performance)</li>
+                    <li><strong>Storage</strong>: 2GB free space for model files</li>
+                    <li><strong>Internet Connection</strong>: Required for Wikipedia searches</li>
+                </ul>
+
+                <h3>Recommended Requirements</h3>
+                <ul>
+                    <li><strong>CPU</strong>: Multi-core processor (Intel i5/Ryzen 5 or better)</li>
+                    <li><strong>GPU</strong>: NVIDIA CUDA-enabled GPU for faster AI processing (optional)</li>
+                    <li><strong>RAM</strong>: 16GB or more for optimal performance</li>
+                </ul>
+
+                <h3>Installation</h3>
+                <p>To install and run VisioWikiAI:</p>
+                <ol>
+                    <li>Clone the repository: <code>git clone https://github.com/yourusername/VisioWikiAI.git</code></li>
+                    <li>Create a virtual environment: <code>python -m venv venv</code></li>
+                    <li>Activate the environment:
+                        <ul>
+                            <li>Windows: <code>venv\Scripts\activate</code></li>
+                            <li>macOS/Linux: <code>source venv/bin/activate</code></li>
+                        </ul>
+                    </li>
+                    <li>Install dependencies: <code>pip install -r requirements.txt</code></li>
+                    <li>Run the application: <code>python wikipedia_summarizer_app.py</code></li>
+                </ol>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 VisioWikiAI. All rights reserved.</p>
+            <p>Created with ❤️ by pcxR23</p>
+        </div>
+    </footer>
+</body>
+</html>
